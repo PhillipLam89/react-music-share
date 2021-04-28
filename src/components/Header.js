@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2)
   },
   background: {
-    background: 'royalblue'
+    backgroundColor: 'royalblue'
   }
 }));
 
