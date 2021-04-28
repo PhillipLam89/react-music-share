@@ -11,7 +11,7 @@ function App() {
       <Header />
       <Grid container spacing={3}>
           {/*Grid component from MU and its properties allow us to have a responsive layout set easily*/}
-        <Grid item xs={12} md={7}>
+        <Grid style={{paddingTop: 80}} item xs={12} md={7}>
           <AddSong />
           <SongList />
         </Grid>
