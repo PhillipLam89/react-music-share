@@ -4,7 +4,7 @@ import { HeadsetTwoTone } from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
   title: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2) //spacing method allows us to set margins without css
   }
 }));
 
