@@ -10,15 +10,17 @@ import {
   makeStyles
 } from "@material-ui/core";
 import { PlayArrow, Save } from "@material-ui/icons";
+import { useQuery } from "@apollo/client";
+import { GET_SONGS } from "../graphql/queries";
 
 function SongList() {
-  let loading = false;
+  const {data, loading, error} = useQuery(GET_SONGS)
 
-  const song = {
-    title: "I AM PRACTICING MATERIALS UI AND REACT",
-    artist: "PHILLIP",
-    thumbnail: "./logo192.png"
-  };
+  // const song = {
+  //   title: "I AM PRACTICING MATERIALS UI AND REACT",
+  //   artist: "PHILLIP",
+  //   thumbnail: "./logo192.png"
+  // };
 
   if (loading) {
     return (
@@ -35,12 +37,14 @@ function SongList() {
     );
   }
 
+  if (error) return <div>Eror fetching the songs...</div>
+
   return (
     <div>
-       {/*here we use the fact that Array.from's first argument can be used to set the length we want. Then we can method chain map to shallow copy 10x. arrow function is MUST */}
-      {Array.from({ length: 10 }, () => song).map((song, i) => (
-        <Song key={i} song={song} />
-      ))}
+      {data.songs.map(song => (
+        <Song key={song.id} song={song}/>
+      ))
+      }
     </div>
   );
 }
