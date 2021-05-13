@@ -11,6 +11,10 @@ import {
 } from "@material-ui/core";
 import { Link, AddBoxOutlined } from "@material-ui/icons";
 
+// the 2 soundcloud/youtube imports below allows us to check if user input links are valid soundcloud/Youtube songs
+import SoundcloudPlayer from 'react-player/lib/players/SoundCloud'
+import YoutubePlayer from 'react-player/lib/players/YouTube'
+//--------------------------------------------------------------------------------------------------------
 const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
