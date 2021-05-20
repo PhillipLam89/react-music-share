@@ -37,7 +37,13 @@ const useStyles = makeStyles(theme => ({
 function AddSong() {
   const classes = useStyles();
   const [url, setUrl] = React.useState('')
+  const [playable, setPlayable] = React.useState(false)
   const [dialog, setDialog] = React.useState(false);
+
+  React.useEffect(() => {
+    const isPlayable = SoundcloudPlayer.canPlay(url) || YoutubePlayer.canPlay(url)  // this method comes from the imnport of SC/YT player
+    setPlayable(isPlayable)
+  }, [url])
 
   function handleCloseDialog() {
     setDialog(false);
@@ -70,7 +76,7 @@ function AddSong() {
           <Button onClick={handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button variant="outlined" color="primary">
+          <Button variant="outlined" color="secondary">
             Add Song
           </Button>
         </DialogActions>
@@ -92,6 +98,7 @@ function AddSong() {
         }}
       />
       <Button
+        disabled={!playable} //this will disable the add button if the user adds in invalid  Youtube/SC url. It is also disabled by default until a valid url is added
         className={classes.addSongButton}
         onClick={() => setDialog(true)}
         variant="contained"
