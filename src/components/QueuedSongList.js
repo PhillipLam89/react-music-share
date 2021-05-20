@@ -37,12 +37,13 @@ const useStyles = makeStyles({
     height: 44
   },
   text: {
-    textOverflow: "ellipsis",
+    textOverflow: "ellipsis", //this will put ... at the end of sentence if its cutoff
     overflow: "hidden"
   },
   container: {
     display: "grid",
     gridAutoFlow: "column",
+    //css grid-template-columns allows us to set the number and widths of columns when display: grid is in use
     gridTemplateColumns: "50px auto 50px",
     gridGap: 12,
     alignItems: "center",
@@ -62,12 +63,12 @@ function QueuedSong({ song }) {
     <div className={classes.container}>
       <Avatar src={thumbnail} alt="Song thumbnail" className={classes.avatar} />
       <div className={classes.songInfoContainer}>
-        <Typography variant="subtitle2" className={classes.text}>
+        <Typography variant="subtitle1" className={classes.text}>
           {title}
         </Typography>
         <Typography
           color="textSecondary"
-          variant="body2"
+          variant="body1"
           className={classes.text}
         >
           {artist}
