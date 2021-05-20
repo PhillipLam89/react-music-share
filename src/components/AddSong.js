@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 function AddSong() {
   const classes = useStyles();
+  const [url, setUrl] = React.useState('')
   const [dialog, setDialog] = React.useState(false);
 
   function handleCloseDialog() {
@@ -76,6 +77,8 @@ function AddSong() {
       </Dialog>
       <TextField
         className={classes.urlInput}
+        onChange={e => setUrl(e.target.value)}
+        value={url}
         placeholder="Add Youtube or Soundcloud Url"
         fullWidth
         margin="normal"
