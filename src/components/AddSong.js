@@ -39,6 +39,13 @@ function AddSong() {
   const [url, setUrl] = React.useState('')
   const [playable, setPlayable] = React.useState(false)
   const [dialog, setDialog] = React.useState(false);
+  const [song, setSong] = React.useState({
+
+    duration: 0,
+    title: '',
+    thumbnail: '',
+    artist: ''
+  })
 
   React.useEffect(() => {
     const isPlayable = SoundcloudPlayer.canPlay(url) || YoutubePlayer.canPlay(url)  // this method comes from the imnport of SC/YT player
@@ -57,6 +64,7 @@ function AddSong() {
     } else if (nestedPlayer.getCurrentSound) {
       songData = await getSoundCloudInfo(nestedPlayer)
     }
+     setSong({...songData, url})
   }
 
   function getYoutubeInfo(player) {
@@ -87,6 +95,8 @@ function AddSong() {
 
   }
 
+  const {thumbnail, title, artist } = song
+
   return (
     <div className={classes.container}>
       <Dialog
@@ -97,13 +107,14 @@ function AddSong() {
         <DialogTitle>Edit Song</DialogTitle>
         <DialogContent>
           <img
-            src="http://img.youtube.com/vi/--ZtUFsIgMk/0.jpg"
+            src={thumbnail}
             alt="Song thumbnail"
             className={classes.thumbnail}
           />
-          <TextField margin="dense" name="title" label="Title" fullWidth />
-          <TextField margin="dense" name="artist" label="Artist" fullWidth />
+          <TextField value={title} margin="dense" name="title" label="Title" fullWidth />
+          <TextField value={artist} margin="dense" name="artist" label="Artist" fullWidth />
           <TextField
+            value={thumbnail}
             margin="dense"
             name="thumbnail"
             label="Thumbnail"
