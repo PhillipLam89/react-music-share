@@ -1,4 +1,5 @@
 import React from "react";
+import { ApolloProvider } from '@apollo/client';
 import {
   TextField,
   InputAdornment,
@@ -7,6 +8,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  useMutation,
   makeStyles
 } from "@material-ui/core";
 import { Link, AddBoxOutlined } from "@material-ui/icons";
@@ -36,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 function AddSong() {
   const classes = useStyles();
+  const [addSong] =  useMutation(ADD_SONG)
   const [url, setUrl] = React.useState('')
   const [playable, setPlayable] = React.useState(false)
   const [dialog, setDialog] = React.useState(false);
@@ -72,6 +75,24 @@ function AddSong() {
       songData = await getSoundCloudInfo(nestedPlayer)
     }
      setSong({...songData, url})
+  }
+
+  async function handleAddSong() {
+    try {
+   const {url, thumbnail, duration, title, artist } = song
+   await addSong( {
+      variables: {
+        url: url.length > 0 ? url : null,
+          //this ensures tat our url cant be null/defined/blank
+        thumbnail: thumbnail.length > 0 ? thumbnail : null,
+        duratiuon: duration > 0 ? duration : null,
+        title: title.length > 0 ? title : null,
+        artist: artist.length > 0 ? artist : null
+      }
+    })
+    } catch( error) {
+      console.error('Error adding song', song)
+    }
   }
 
   function getYoutubeInfo(player) {
@@ -127,7 +148,7 @@ function AddSong() {
           <Button onClick={handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button variant="outlined" color="secondary">
+          <Button onClick={handleAddSong} variant="outlined" color="secondary">
             Add Song
           </Button>
         </DialogActions>
