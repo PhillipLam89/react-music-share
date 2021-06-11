@@ -8,10 +8,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  useMutation,
   makeStyles
 } from "@material-ui/core";
 import { Link, AddBoxOutlined } from "@material-ui/icons";
+import { useMutation } from "@apollo/client";
+import { ADD_SONG } from "../mutations";
 import ReactPlayer from 'react-player'
 // the 2 soundcloud/youtube imports below allows us to check if user input links are valid soundcloud/Youtube songs
 import SoundcloudPlayer from 'react-player/lib/players/SoundCloud'
@@ -90,7 +91,7 @@ function AddSong() {
         artist: artist.length > 0 ? artist : null
       }
     })
-    } catch( error) {
+    } catch(error) {
       console.error('Error adding song', song)
     }
   }
