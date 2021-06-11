@@ -14,9 +14,9 @@ function Header() {
   return (
     <AppBar color="primary" position="fixed">
       <Toolbar>
-        <HeadsetTwoTone />
-        <Typography className={classes.title} variant="h6" component="h1">
-          Apollo Music Share
+        <HeadsetTwoTone  />
+        <Typography style={{width: '100%', textAlign: 'center'}} className={classes.title} text-align="center" variant="h6" component="h1">
+          Phillip's Soundcloud & Youtube Music Share App
         </Typography>
       </Toolbar>
     </AppBar>

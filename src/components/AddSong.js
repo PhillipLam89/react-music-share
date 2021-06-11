@@ -1,5 +1,4 @@
 import React from "react";
-import { ApolloProvider } from '@apollo/client';
 import {
   TextField,
   InputAdornment,
@@ -10,6 +9,7 @@ import {
   DialogActions,
   makeStyles
 } from "@material-ui/core";
+
 import { Link, AddBoxOutlined } from "@material-ui/icons";
 import { useMutation } from "@apollo/client";
 import { ADD_SONG } from "../mutations";
@@ -37,19 +37,21 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AddSong() {
-  const classes = useStyles();
-  const [addSong] =  useMutation(ADD_SONG)
-  const [url, setUrl] = React.useState('')
-  const [playable, setPlayable] = React.useState(false)
-  const [dialog, setDialog] = React.useState(false);
-  const [song, setSong] = React.useState({
-
+const DEFAULT_SONG = {
     duration: 0,
     title: '',
     thumbnail: '',
     artist: ''
-  })
+  }
+
+function AddSong() {
+  const classes = useStyles();
+  const [addSong, {error}] =  useMutation(ADD_SONG)
+  const [url, setUrl] = React.useState('')
+  const [playable, setPlayable] = React.useState(false)
+  const [dialog, setDialog] = React.useState(false);
+  const [song, setSong] = React.useState(DEFAULT_SONG)
+
 
   React.useEffect(() => {
     const isPlayable = SoundcloudPlayer.canPlay(url) || YoutubePlayer.canPlay(url)  // this method comes from the imnport of SC/YT player
@@ -79,7 +81,7 @@ function AddSong() {
   }
 
   async function handleAddSong() {
-    try {
+  try {
    const {url, thumbnail, duration, title, artist } = song
    await addSong( {
       variables: {
@@ -91,8 +93,11 @@ function AddSong() {
         artist: artist.length > 0 ? artist : null
       }
     })
+    handleCloseDialog()
+    setSong(DEFAULT_SONG)
+    setUrl('')
     } catch(error) {
-      console.error('Error adding song', song)
+      console.error('Error adding song', error)
     }
   }
 
@@ -124,6 +129,10 @@ function AddSong() {
 
   }
 
+  function handleError(field) {
+    return error && error.graphQLErrors[0].extensions.path.includes(field) // ONLY if we have an error, then do we return the boolean from error.graphQLErrors[0].extensions.path.includes(field). Remember that if we dont have an error, this function never runs, it needs an error from backend
+  }
+
   const {thumbnail, title, artist } = song
 
   return (
@@ -140,9 +149,9 @@ function AddSong() {
             alt="Song thumbnail"
             className={classes.thumbnail}
           />
-          <TextField value={title} onChange={handleChangeSong} margin="dense" name="title" label="Title" fullWidth />
-          <TextField value={artist} onChange={handleChangeSong} margin="dense" name="artist" label="Artist" fullWidth />
-          <TextField value={thumbnail} onChange={handleChangeSong} margin="dense" name="thumbnail" label="Thumbnail" fullWidth />
+          <TextField value={title} onChange={handleChangeSong} margin="dense" name="title" label="Title" fullWidth error={handleError('title')} helperText={handleError('title') && 'Fill out TITLE field'} />
+          <TextField value={artist} onChange={handleChangeSong} margin="dense" name="artist" label="Artist" fullWidth error={handleError('artist')} helperText={handleError('artist') && 'Fill out ARTIST field'} />
+          <TextField value={thumbnail} onChange={handleChangeSong} margin="dense" name="thumbnail" label="Thumbnail" fullWidth error={handleError('thumbnail')} helperText={handleError('thumbnail') && 'Fill out THUMBNAIL field'} />
 
         </DialogContent>
         <DialogActions>
