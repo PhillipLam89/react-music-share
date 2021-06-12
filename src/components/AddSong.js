@@ -9,7 +9,10 @@ import {
   DialogActions,
   makeStyles
 } from "@material-ui/core";
+
 import { Link, AddBoxOutlined } from "@material-ui/icons";
+import { useMutation } from "@apollo/client";
+import { ADD_SONG } from "../mutations";
 import ReactPlayer from 'react-player'
 // the 2 soundcloud/youtube imports below allows us to check if user input links are valid soundcloud/Youtube songs
 import SoundcloudPlayer from 'react-player/lib/players/SoundCloud'
@@ -34,16 +37,33 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const DEFAULT_SONG = {
+    duration: 0,
+    title: '',
+    thumbnail: '',
+    artist: ''
+  }
+
 function AddSong() {
   const classes = useStyles();
+  const [addSong, {error}] =  useMutation(ADD_SONG)
   const [url, setUrl] = React.useState('')
   const [playable, setPlayable] = React.useState(false)
   const [dialog, setDialog] = React.useState(false);
+  const [song, setSong] = React.useState(DEFAULT_SONG)
+
 
   React.useEffect(() => {
     const isPlayable = SoundcloudPlayer.canPlay(url) || YoutubePlayer.canPlay(url)  // this method comes from the imnport of SC/YT player
     setPlayable(isPlayable)
   }, [url])
+
+  function handleChangeSong(e) {
+    const {name, value} = e.target
+    setSong(prevSong => ({
+      ...prevSong, [name]: value  // [name] allows us to set the property name of an object
+    }))
+  }
 
   function handleCloseDialog() {
     setDialog(false);
@@ -56,6 +76,28 @@ function AddSong() {
        songData =  getYoutubeInfo(nestedPlayer)
     } else if (nestedPlayer.getCurrentSound) {
       songData = await getSoundCloudInfo(nestedPlayer)
+    }
+     setSong({...songData, url})
+  }
+
+  async function handleAddSong() {
+  try {
+   const {url, thumbnail, duration, title, artist } = song
+   await addSong( {
+      variables: {
+        url: url.length > 0 ? url : null,
+          //this ensures tat our url cant be null/defined/blank
+        thumbnail: thumbnail.length > 0 ? thumbnail : null,
+        duration: duration > 0 ? duration : null,
+        title: title.length > 0 ? title : null,
+        artist: artist.length > 0 ? artist : null
+      }
+    })
+    handleCloseDialog()
+    setSong(DEFAULT_SONG)
+    setUrl('')
+    } catch(error) {
+      console.error('Error adding song', error)
     }
   }
 
@@ -87,6 +129,16 @@ function AddSong() {
 
   }
 
+  function handleError(field) {
+
+    return error && error.graphQLErrors[0].extensions.path.includes(field)
+     // ONLY if we have an error, then do we return the boolean from error.graphQLErrors[0].extensions.path.includes(field). Remember that if we dont have an error, this function never runs, it needs an error from backend
+
+    //  return error?.graphQLErrors[0]?.extensions?.path.includes(field)
+  }
+
+  const {thumbnail, title, artist } = song
+  console.dir(error)
   return (
     <div className={classes.container}>
       <Dialog
@@ -97,24 +149,20 @@ function AddSong() {
         <DialogTitle>Edit Song</DialogTitle>
         <DialogContent>
           <img
-            src="http://img.youtube.com/vi/--ZtUFsIgMk/0.jpg"
+            src={thumbnail}
             alt="Song thumbnail"
             className={classes.thumbnail}
           />
-          <TextField margin="dense" name="title" label="Title" fullWidth />
-          <TextField margin="dense" name="artist" label="Artist" fullWidth />
-          <TextField
-            margin="dense"
-            name="thumbnail"
-            label="Thumbnail"
-            fullWidth
-          />
+          <TextField value={title} onChange={handleChangeSong} margin="dense" name="title" label="Title" fullWidth error={handleError('title')} helperText={handleError('title') && 'Fill out TITLE field'} />
+          <TextField value={artist} onChange={handleChangeSong} margin="dense" name="artist" label="Artist" fullWidth error={handleError('artist')} helperText={handleError('artist') && 'Fill out ARTIST field'} />
+          <TextField value={thumbnail} onChange={handleChangeSong} margin="dense" name="thumbnail" label="Thumbnail" fullWidth error={handleError('thumbnail')} helperText={handleError('thumbnail') && 'Fill out THUMBNAIL field'} />
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button variant="outlined" color="secondary">
+          <Button onClick={handleAddSong} variant="outlined" color="secondary">
             Add Song
           </Button>
         </DialogActions>
