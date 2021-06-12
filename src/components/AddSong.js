@@ -88,7 +88,7 @@ function AddSong() {
         url: url.length > 0 ? url : null,
           //this ensures tat our url cant be null/defined/blank
         thumbnail: thumbnail.length > 0 ? thumbnail : null,
-        duratiuon: duration > 0 ? duration : null,
+        duration: duration > 0 ? duration : null,
         title: title.length > 0 ? title : null,
         artist: artist.length > 0 ? artist : null
       }
@@ -130,11 +130,15 @@ function AddSong() {
   }
 
   function handleError(field) {
-    return error && error.graphQLErrors[0].extensions.path.includes(field) // ONLY if we have an error, then do we return the boolean from error.graphQLErrors[0].extensions.path.includes(field). Remember that if we dont have an error, this function never runs, it needs an error from backend
+
+    return error && error.graphQLErrors[0].extensions.path.includes(field)
+     // ONLY if we have an error, then do we return the boolean from error.graphQLErrors[0].extensions.path.includes(field). Remember that if we dont have an error, this function never runs, it needs an error from backend
+
+    //  return error?.graphQLErrors[0]?.extensions?.path.includes(field)
   }
 
   const {thumbnail, title, artist } = song
-
+  console.dir(error)
   return (
     <div className={classes.container}>
       <Dialog
