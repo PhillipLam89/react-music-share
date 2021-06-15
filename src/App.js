@@ -4,13 +4,28 @@ import AddSong from "./components/AddSong";
 import SongList from "./components/SongList";
 import SongPlayer from "./components/SongPlayer";
 import { Grid, useMediaQuery, Hidden } from "@material-ui/core";
+import reducer from './reducer'
+
+export const SongContext = React.createContext({
+  song: {
+    id: '59b69e6d-f033-4540-916f-fdb2155bcc83',
+    title: 'Quantum Reality: Space, Time, and Entanglement',
+    artist: 'Scientists',
+    thumbnail: 'http://img.youtube.com/vi/BFrBr8oUVXU/0.jpg',
+    url: 'https://www.youtube.com/watch?v=BFrBr8oUVXU&t=4s',
+    duration: 5569
+  },
+  isPlaying: false
+})
 
 function App() {
+  const initialSongState = React.useContext(SongContext)
+  const [state, dispatch] = React.useReducer(songReducer => {}, initialSongState)
   const greaterThanSm = useMediaQuery(theme => theme.breakpoints.up("sm"));
   const greaterThanMd = useMediaQuery(theme => theme.breakpoints.up("md"));
 
   return (
-    <>
+    <SongContext.Provider value={{state, dispatch}}>
       {/*hidden component allows us to hide the header CONDITIONALLY, when the browser width is Xtra-small (mobile)*/}
       <Hidden only="xs">
         <Header />
@@ -52,7 +67,7 @@ function App() {
           <SongPlayer />
         </Grid>
       </Grid>
-    </>
+    </SongContext.Provider>
   );
 }
 
