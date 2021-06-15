@@ -1,4 +1,3 @@
-import { parseStartTime } from "react-player/lib/utils"
 
 function songReducer(state, action) {
   switch(action.type) {
@@ -6,7 +5,9 @@ function songReducer(state, action) {
       return {...state, isPlaying: true}
     }
 
-
+    case 'PAUSE_SONG': {
+      return {...state, isPlaying: false}
+    }
 
     default:
       return state
