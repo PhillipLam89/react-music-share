@@ -4,7 +4,7 @@ import AddSong from "./components/AddSong";
 import SongList from "./components/SongList";
 import SongPlayer from "./components/SongPlayer";
 import { Grid, useMediaQuery, Hidden } from "@material-ui/core";
-import reducer from './reducer'
+import songReducer from './reducer'
 
 export const SongContext = React.createContext({
   song: {
@@ -20,7 +20,7 @@ export const SongContext = React.createContext({
 
 function App() {
   const initialSongState = React.useContext(SongContext)
-  const [state, dispatch] = React.useReducer(songReducer => {}, initialSongState)
+  const [state, dispatch] = React.useReducer(songReducer, initialSongState)
   const greaterThanSm = useMediaQuery(theme => theme.breakpoints.up("sm"));
   const greaterThanMd = useMediaQuery(theme => theme.breakpoints.up("md"));
 

@@ -73,7 +73,7 @@ function AddSong() {
     const nestedPlayer = player.player.player
     let songData;
     if (nestedPlayer.getVideoData) {
-       songData =  getYoutubeInfo(nestedPlayer)
+       songData =  await getYoutubeInfo(nestedPlayer)
     } else if (nestedPlayer.getCurrentSound) {
       songData = await getSoundCloudInfo(nestedPlayer)
     }
