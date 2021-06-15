@@ -9,9 +9,10 @@ import {
   IconButton,
   makeStyles
 } from "@material-ui/core";
-import { PlayArrow, Save } from "@material-ui/icons";
+import { Pause, PlayArrow, Save } from "@material-ui/icons";
 import { useSubscription } from "@apollo/react-hooks";
 import { GET_SONGS } from "../graphql/subscriptions";
+import { SongContext } from "../App";
 
 function SongList() {
   const {data, loading, error} = useSubscription(GET_SONGS)
@@ -71,7 +72,14 @@ function SongList() {
 
 function Song({ song }) {
   const classes = useStyles();
+  const {state} = React.useContext(SongContext)
+  const [currentSongPlaying, setCurrentSongPlaying] = React.useState(false)
   const { title, artist, thumbnail } = song;
+
+  React.useEffect(() =>  {
+    const isSongPlaying = state.isPlaying && song.id === state.song.id
+    setCurrentSongPlaying(isSongPlaying)
+  }, [song.id,state.song.id, state.isPlaying])  //this means pressing pause/play will ONLY affect the correct song (both in queue & playing list on left side)
 
   return (
     <Card className={classes.container}>
@@ -88,7 +96,7 @@ function Song({ song }) {
           </CardContent>
            <CardActions>
             <IconButton size="small" color="primary">
-              <PlayArrow />
+              {currentSongPlaying ? <Pause /> : <PlayArrow />}
             </IconButton>
             <IconButton size="small" color="secondary">
               <Save />

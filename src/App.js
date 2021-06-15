@@ -8,12 +8,12 @@ import songReducer from './reducer'
 
 export const SongContext = React.createContext({
   song: {
-    id: '59b69e6d-f033-4540-916f-fdb2155bcc83',
-    title: 'Quantum Reality: Space, Time, and Entanglement',
-    artist: 'Scientists',
-    thumbnail: 'http://img.youtube.com/vi/BFrBr8oUVXU/0.jpg',
-    url: 'https://www.youtube.com/watch?v=BFrBr8oUVXU&t=4s',
-    duration: 5569
+    id: '49aa634b-0118-4d8a-b946-78959cdd7168',
+    title: 'Narcos Mexico: Sinaloa Cartel in Guadalajara',
+    artist: 'Narcos',
+    thumbnail: 'http://img.youtube.com/vi/T1NZAalNHA8/0.jpg',
+    url: 'https://www.youtube.com/watch?v=T1NZAalNHA8',
+    duration: 352
   },
   isPlaying: false
 })
