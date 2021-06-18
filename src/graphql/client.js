@@ -9,6 +9,7 @@ import {gql} from 'apollo-boost'
 import ApolloClient from 'apollo-client'
 import { WebSocketLink } from 'apollo-link-ws'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { GET_QUEUED_SONGS } from './queries'
 
 const client = new ApolloClient({
   link: new WebSocketLink({
@@ -43,7 +44,30 @@ const client = new ApolloClient({
     type Mutation {
       addOrRemoveFromQueue(input: SongInput!): [Song]!
     }
-  `
+  `,
+  resolvers: {
+    Mutation: {
+      addOrRemoveFromQueue: (_, {input}, {cache}) => { // we can work w/ the cache to take whats in it currently (empty array) then add/remove songs from it
+        const queryResult =  cache.readQuery({
+        query: GET_QUEUED_SONGS
+        })
+        if (queryResult) {
+          const {queue} = queryResult //remember that queue is an array we destructured
+
+          const isInQueue = queue.some(song => song.id === input.id) //we will check the song's id to see if it is already in the queue. If it IS already there, then we will delete, otherwisem we will add
+
+        // if it IS in the queue, we will remove it by returning a filtered array consisting of all other songs, otherwise we return the current queue anda add in the new "input" aka user pasted song
+          const newQueue =  isInQueue ? queue.filter(song => song.id !== input.id) : [...queue, input]
+          cache.writeQuery({
+            query: GET_QUEUED_SONGS,
+            data: {queue: newQueue}
+          })
+
+          return newQueue
+        }
+      }
+    }
+  }
 })
 
 const data = {
