@@ -17,11 +17,11 @@ import { SongContext } from "../App";
 function SongList() {
   const {data, loading, error} = useSubscription(GET_SONGS)
 
-  // const song = {
-  //   title: "I AM PRACTICING MATERIALS UI AND REACT",
-  //   artist: "PHILLIP",
-  //   thumbnail: "./logo192.png"
-  // };
+  const song = {
+    title: "I AM PRACTICING MATERIALS UI AND REACT",
+    artist: "PHILLIP",
+    thumbnail: "./logo192.png"
+  };
 
   if (loading) {
     return (
@@ -72,7 +72,7 @@ function SongList() {
 
 function Song({ song }) {
   const classes = useStyles();
-  const {state} = React.useContext(SongContext)
+  const {state, dispatch} = React.useContext(SongContext)
   const [currentSongPlaying, setCurrentSongPlaying] = React.useState(false)
   const { title, artist, thumbnail } = song;
 
@@ -80,6 +80,11 @@ function Song({ song }) {
     const isSongPlaying = state.isPlaying && song.id === state.song.id
     setCurrentSongPlaying(isSongPlaying)
   }, [song.id,state.song.id, state.isPlaying])  //this means pressing pause/play will ONLY affect the correct song (both in queue & playing list on left side)
+
+  function handleTogglePlay(){
+    dispatch({type: 'SET_SONG', payload: { song }})
+    dispatch(state.isPlaying ? {type: 'PAUSE_SONG'} : {type: 'PLAY_SONG'})
+  }
 
   return (
     <Card className={classes.container}>
@@ -95,7 +100,7 @@ function Song({ song }) {
             </Typography>
           </CardContent>
            <CardActions>
-            <IconButton size="small" color="primary">
+            <IconButton onClick={handleTogglePlay} size="small" color="primary">
               {currentSongPlaying ? <Pause /> : <PlayArrow />}
             </IconButton>
             <IconButton size="small" color="secondary">

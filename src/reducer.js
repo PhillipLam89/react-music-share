@@ -9,6 +9,10 @@ function songReducer(state, action) {
       return {...state, isPlaying: false}
     }
 
+    case 'SET_SONG': {
+      return {...state, song: action.payload.song}
+    }
+
     default:
       return state
   }
