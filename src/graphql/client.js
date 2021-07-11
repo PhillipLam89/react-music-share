@@ -71,8 +71,13 @@ const client = new ApolloClient({
   }
 })
 
+// below is how we will get the songs' data stored in local-storage. Remember they were set in local-storage after
+// the user clicks add
+
+
+
 const data = {
-  queue: []
+  queue: localStorage.getItem('queue') ? JSON.parse(localStorage.getItem('queue')) : []
 }
 
 client.writeData({data})
