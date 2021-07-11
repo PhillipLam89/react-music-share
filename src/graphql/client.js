@@ -51,6 +51,7 @@ const client = new ApolloClient({
         const queryResult =  cache.readQuery({
         query: GET_QUEUED_SONGS
         })
+
         if (queryResult) {
           const {queue} = queryResult //remember that queue is an array we destructured
 
@@ -62,9 +63,9 @@ const client = new ApolloClient({
             query: GET_QUEUED_SONGS,
             data: {queue: newQueue}
           })
-
           return newQueue
         }
+        return []
       }
     }
   }
