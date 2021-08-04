@@ -80,7 +80,12 @@ function SongPlayer() {
           </div>
           <Slider type="range" min={0} max={1} step={0.01} />
         </div>
-        <ReactPlayer url={state.song.url} playing={state.isPlaying} hidden />
+        <ReactPlayer
+        onProgress={({played, playedSeconds}) => {
+
+        }}
+        url={state.song.url}
+        playing={state.isPlaying} hidden />
         <CardMedia
           className={classes.thumbnail}
           image={state.song.thumbnail}
