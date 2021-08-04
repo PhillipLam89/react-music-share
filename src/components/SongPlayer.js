@@ -70,6 +70,10 @@ function SongPlayer() {
     reactPlayerRef.current.seekTo(played)
   }
 
+  function formatDuration(seconds) {
+    return new Date(seconds * 1000).toISOString().substr(11,8)
+  }
+
   return (
     <>
       <Card variant="outlined" className={classes.container}>
@@ -93,7 +97,7 @@ function SongPlayer() {
               <SkipNext />
             </IconButton>
             <Typography variant="subtitle1" component="p" color="textSecondary">
-              {playedSeconds}
+              {formatDuration(playedSeconds)}
             </Typography>
           </div>
           <Slider onMouseDown={handleSeekMouseDown} onMouseUp={handleSeekMouseUp}  onChange={handleProgressChange} value={played} type="range" min={0} max={1} step={0.01} />
