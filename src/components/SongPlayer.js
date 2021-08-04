@@ -46,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 function SongPlayer() {
   const {data} = useQuery(GET_QUEUED_SONGS)
   const { state, dispatch } = React.useContext(SongContext)
+  const [played, setPlayed] = React.useState(0)
   const classes = useStyles();
 
   function handleTogglePlay() {
@@ -78,11 +79,11 @@ function SongPlayer() {
               00:01:30
             </Typography>
           </div>
-          <Slider type="range" min={0} max={1} step={0.01} />
+          <Slider value={played} type="range" min={0} max={1} step={0.01} />
         </div>
         <ReactPlayer
         onProgress={({played, playedSeconds}) => {
-
+            setPlayed(played)
         }}
         url={state.song.url}
         playing={state.isPlaying} hidden />
