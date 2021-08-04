@@ -76,7 +76,7 @@ const client = new ApolloClient({
 
 
 
-const data = {
+const data = { // if there is nothing saved in the queue, it will display nothing (empty array)
   queue: localStorage.getItem('queue') ? JSON.parse(localStorage.getItem('queue')) : []
 }
 
